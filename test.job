@@ -29,15 +29,6 @@ TEST_PATH="$HOME/data/diffusion-lagr-1" # path to the ScIDiff repository
 MODELS_PATH="${TEST_PATH}/experiments/${DATESTAMP}/${SLURM_JOB_ID}" # checkpoints are stored here
 DATA_PATH="$HOME/data/diffusion-lagr-1/datasets/Lagr_u1c_diffusion-demo.h5" # path to the training data
 
-function restart
-{
-        echo "Calling restart" >> $LOG_STDOUT
-        scontrol requeue $SLURM_JOB_ID
-        echo "Scheduled job for restart" >> $LOG_STDOUT
-}
-
-trap restart USR1
-
 
 # Start or restart experiment
 date >> $LOG_STDOUT
