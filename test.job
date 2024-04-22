@@ -18,7 +18,7 @@
 DATESTAMP=`date +%Y%m%d`
 # paths to store Slurm's log files
 LOGS_FOLDER="${HOME}/local_logs/test_diff_lagr/${DATESTAMP}/${SLURM_JOB_ID}"
-LOG_STDOUT="local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stdout"
+LOG_STDOUT="${HOME}/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stdout"
 
 # Create logs folder
 mkdir -p $LOGS_FOLDER
