@@ -7,8 +7,8 @@
 #SBATCH --gres=gpu:4
 #SBATCH --job-name=test_diff_lagr
 #SBATCH --cpus-per-task=8
-#SBATCH --output=logs/slurm_out_%j.stdout
-#SBATCH --error=logs/slurm_out_%j.stderr
+#SBATCH --output=logs/slurm_out.stdout
+#SBATCH --error=logs/slurm_out.stderr
 #SBATCH --mem=16g
 #SBATCH --open-mode=append
 #SBATCH --requeue
@@ -20,8 +20,6 @@ DATESTAMP=`date +%Y%m%d`
 LOGS_FOLDER="${HOME}/local_logs/test_diff_lagr/${DATESTAMP}/${SLURM_JOB_ID}"
 LOG_STDOUT="${HOME}/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stdout"
 
-echo $LOGS_FOLDER
-echo $LOG_STDOUT
 
 # Create logs folder
 mkdir -p $LOGS_FOLDER
@@ -30,6 +28,7 @@ mkdir -p $LOGS_FOLDER
 TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
 DATA_PATH="$HOME/diffusion-lagr-1/datasets/Lagr_u1c_diffusion-demo.h5" # path to the training data
 
+echo $LOGS_FOLDER >> $LOG_STDOUT
 
 # Start or restart experiment
 date >> $LOG_STDOUT
