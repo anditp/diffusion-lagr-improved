@@ -1,0 +1,57 @@
+#!/bin/bash 
+
+# This is a job script, which was used for training the ScIDiff model
+
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:2
+#SBATCH --job-name=test_diff_lagr
+#SBATCH --cpus-per-task=8
+#SBATCH --output=local_logs/test_diff_lagr/slurm_out_%j.stdout
+#SBATCH --error=local_logs/test_diff_lagr/slurm_out_%j.stderr
+#SBATCH --mem=10g
+#SBATCH --open-mode=append
+#SBATCH --requeue
+#SBATCH --requeue
+
+DATESTAMP=`date +%Y%m%d`
+# paths to store Slurm's log files
+LOGS_FOLDER="${HOME}/local_logs/test_diff_lagr/${DATESTAMP}/${SLURM_JOB_ID}"
+LOG_STDOUT="local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stdout"
+
+# ScIDiff-related arguments
+TEST_PATH="$HOME/data/diffusion-lagr-1" # path to the ScIDiff repository
+MODELS_PATH="${TEST_PATH}/experiments/${DATESTAMP}/${SLURM_JOB_ID}" # checkpoints are stored here
+DATA_PATH="$HOME/data/diffusion-lagr-1/datasets/Lagr_u1c_diffusion-demo.h5" # path to the training data
+
+function restart
+{
+        echo "Calling restart" >> $LOG_STDOUT
+        scontrol requeue $SLURM_JOB_ID
+        echo "Scheduled job for restart" >> $LOG_STDOUT
+}
+
+trap restart USR1
+
+# Create logs folder
+mkdir -p $LOGS_FOLDER
+# Create checkpoints folder
+mkdir -p $MODELS_PATH
+
+# Start or restart experiment
+date >> $LOG_STDOUT
+echo "===== Starting job =====">> $LOG_STDOUT
+echo "JOB ID: $SLURM_JOB_ID" >> $LOG_STDOUT
+
+# Load the miniconda environment
+source $HOME/.bashrc
+conda activate test_env
+
+which python >> $LOG_STDOUT
+
+# Training scidiff model with 3-D lagrangian trajectories
+# MODELS_PATH can be a path to a directory that contains a weights.pt checkpoint file
+python $TEST_PATH/turb_model.py --dataset_path $DATA_PATH --dataset_name train --dims 1 >> $LOG_STDOUT
+
+# Move Slurm's logs to folder named with date
+mv $HOME/$LOG_STDOUT $LOGS_FOLDER
+mv $HOME/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stderr $LOGS_FOLDER
