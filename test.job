@@ -3,7 +3,7 @@
 # This is a job script, which was used for training the ScIDiff model
 
 #SBATCH --partition=titanic
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:4
 #SBATCH --job-name=test_diff_lagr
 #SBATCH --cpus-per-task=8
 #SBATCH --output=local_logs/test_diff_lagr/slurm_out_%j.stdout
