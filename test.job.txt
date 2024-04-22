@@ -42,9 +42,6 @@ date >> $LOG_STDOUT
 echo "===== Starting job =====">> $LOG_STDOUT
 echo "JOB ID: $SLURM_JOB_ID" >> $LOG_STDOUT
 
-# Load the miniconda environment
-source $HOME/.bashrc
-conda activate test_env
 
 which python >> $LOG_STDOUT
 
