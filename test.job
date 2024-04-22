@@ -37,8 +37,6 @@ echo "JOB ID: $SLURM_JOB_ID" >> $LOG_STDOUT
 
 # Load the miniconda environment
 source $HOME/.bashrc
-conda init
-conda activate
 
 which python >> $LOG_STDOUT
 
