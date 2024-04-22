@@ -25,9 +25,9 @@ mkdir -p $MODELS_PATH
 #SBATCH --requeue
 
 # ScIDiff-related arguments
-TEST_PATH="$HOME/data/diffusion-lagr-1" # path to the ScIDiff repository
+TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
 MODELS_PATH="${TEST_PATH}/experiments/${DATESTAMP}/${SLURM_JOB_ID}" # checkpoints are stored here
-DATA_PATH="$HOME/data/diffusion-lagr-1/datasets/Lagr_u1c_diffusion-demo.h5" # path to the training data
+DATA_PATH="$HOME/diffusion-lagr-1/datasets/Lagr_u1c_diffusion-demo.h5" # path to the training data
 
 
 # Start or restart experiment
