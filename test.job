@@ -20,6 +20,9 @@ DATESTAMP=`date +%Y%m%d`
 LOGS_FOLDER="${HOME}/local_logs/test_diff_lagr/${DATESTAMP}/${SLURM_JOB_ID}"
 LOG_STDOUT="${HOME}/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stdout"
 
+echo $LOGS_FOLDER
+echo $LOG_STDOUT
+
 # Create logs folder
 mkdir -p $LOGS_FOLDER
 
