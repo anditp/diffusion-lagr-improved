@@ -340,6 +340,7 @@ class Logger(object):
         self.dir = dir
         self.output_formats = output_formats
         self.comm = comm
+        print(self.dir)
 
     # Logging API, forwarded
     # ----------------------------------------
