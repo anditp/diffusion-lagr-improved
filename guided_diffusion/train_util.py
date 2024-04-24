@@ -164,9 +164,7 @@ class TrainLoop:
                 # Run for a finite amount of time in integration tests.
                 if os.environ.get("DIFFUSION_TRAINING_TEST", "") and self.step > 0:
                     return
-            if self.step % 10000 == 0:
-                th.cuda.init()
-                print(th.cuda.memory_summary())
+            th.cuda.empty_cache()
             self.step += 1
         # Save the last checkpoint if it wasn't already saved.
         if (self.step - 1) % self.save_interval != 0:
