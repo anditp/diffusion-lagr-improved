@@ -30,6 +30,7 @@ def load_data(
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
+    print(rank)
     
     with h5py.File(dataset_path, 'r', driver='mpio', comm=MPI.COMM_SELF) as f:
     #with h5py.File(dataset_path, 'r') as f:  # replace the above line with this line for serial h5py
