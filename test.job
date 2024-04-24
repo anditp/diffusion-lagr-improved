@@ -47,6 +47,7 @@ which python >> $LOG_STDOUT
 # Training scidiff model with 3-D lagrangian trajectories
 # MODELS_PATH can be a path to a directory that contains a weights.pt checkpoint file
 python $TEST_PATH/mpi_test.py
+echo "here" >> $LOG_STDOUT
 python $TEST_PATH/turb_train.py $DATA_FLAGS $MODEL_FLAGS $DIFFUSION_FLAGS $TRAIN_FLAGS >> $LOG_STDOUT
 
 # Move Slurm's logs to folder named with date
