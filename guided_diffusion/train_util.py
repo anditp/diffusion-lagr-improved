@@ -165,6 +165,7 @@ class TrainLoop:
                 if os.environ.get("DIFFUSION_TRAINING_TEST", "") and self.step > 0:
                     return
             if self.step % 10000 == 0:
+                th.cuda.init()
                 print(th.cuda.memory_summary())
             self.step += 1
         # Save the last checkpoint if it wasn't already saved.
