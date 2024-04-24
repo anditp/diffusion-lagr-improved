@@ -164,6 +164,8 @@ class TrainLoop:
                 # Run for a finite amount of time in integration tests.
                 if os.environ.get("DIFFUSION_TRAINING_TEST", "") and self.step > 0:
                     return
+            if self.step % 10000 == 0:
+                print(th.cuda.memory_summary())
             self.step += 1
         # Save the last checkpoint if it wasn't already saved.
         if (self.step - 1) % self.save_interval != 0:
@@ -250,7 +252,6 @@ class TrainLoop:
                 bf.join(get_blob_logdir(), f"opt{(self.step+self.resume_step):06d}.pt"),
                 "wb",
             ) as f:
-                print(get_blob_logdir())
                 th.save(self.opt.state_dict(), f)
 
         dist.barrier()
