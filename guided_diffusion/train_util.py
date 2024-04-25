@@ -87,7 +87,8 @@ class TrainLoop:
                 copy.deepcopy(self.mp_trainer.master_params)
                 for _ in range(len(self.ema_rate))
             ]
-
+        
+        print(th.cuda.is_available())
         if th.cuda.is_available():
             self.use_ddp = True
             self.ddp_model = DDP(
@@ -104,7 +105,7 @@ class TrainLoop:
                     "Distributed training requires CUDA. "
                     "Gradients will not be synchronized properly!"
                 )
-            self.use_ddp = True
+            self.use_ddp = False
             self.ddp_model = self.model
 
     def _load_and_sync_parameters(self):
