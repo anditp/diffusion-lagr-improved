@@ -15,6 +15,7 @@ from guided_diffusion.script_util import (
 )
 from guided_diffusion.train_util import TrainLoop
 from torch.cuda import is_available
+import torch
 
 
 def main():
@@ -32,6 +33,7 @@ def main():
 
     logger.log("creating data loader...")
     logger.log(is_available())
+    logger.log(torch.version.cuda)
     data = load_data(
         dataset_path=args.dataset_path,
         dataset_name=args.dataset_name,
