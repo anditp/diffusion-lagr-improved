@@ -9,7 +9,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
-#SBATCH --mem=16g
+#SBATCH --mem-per-gpu=10g
 #SBATCH --open-mode=append
 #SBATCH --requeue
 #SBATCH --requeue
@@ -31,7 +31,7 @@ echo $LOGS_FOLDER >> $LOG_STDOUT
 DATA_FLAGS="--dataset_path datasets/Lagr_u1c_diffusion-demo.h5 --dataset_name train"
 MODEL_FLAGS="--dims 1 --image_size 2000 --in_channels 1 --num_channels 128 --num_res_blocks 3 --attention_resolutions 250,125 --channel_mult 1,1,2,3,4"
 DIFFUSION_FLAGS="--diffusion_steps 800 --noise_schedule tanh6,1"
-TRAIN_FLAGS="--lr 1e-4 --batch_size 16"
+TRAIN_FLAGS="--lr 1e-4 --batch_size 128"
 
 
 # Start or restart experiment
