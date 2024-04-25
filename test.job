@@ -9,7 +9,7 @@
 #SBATCH --cpus-per-task=12
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
-#SBATCH --mem-per-gpu=10g
+#SBATCH --mem=40g
 #SBATCH --open-mode=append
 #SBATCH --requeue
 #SBATCH --requeue
