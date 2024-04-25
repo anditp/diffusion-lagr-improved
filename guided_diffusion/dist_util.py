@@ -35,7 +35,7 @@ def setup_dist():
         hostname = socket.gethostbyname(socket.getfqdn())
     os.environ["MASTER_ADDR"] = comm.bcast(hostname, root=0)
     os.environ["RANK"] = str(comm.rank)
-    os.environ["WORLD_SIZE"] = "4"
+    os.environ["WORLD_SIZE"] = str(comm.size)
 
     port = comm.bcast(_find_free_port(), root=0)
     os.environ["MASTER_PORT"] = str(port)
@@ -47,7 +47,7 @@ def dev():
     Get the device to use for torch.distributed.
     """
     if th.cuda.is_available():
-        return th.device(f"cuda")
+        return th.device(f"cuda:0,1")
     return th.device("cpu")
 
 
