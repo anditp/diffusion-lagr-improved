@@ -88,7 +88,6 @@ class TrainLoop:
                 for _ in range(len(self.ema_rate))
             ]
         
-        print(th.cuda.is_available())
         if th.cuda.is_available():
             self.use_ddp = True
             self.ddp_model = DDP(

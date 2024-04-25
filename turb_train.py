@@ -14,6 +14,7 @@ from guided_diffusion.script_util import (
     add_dict_to_argparser,
 )
 from guided_diffusion.train_util import TrainLoop
+from torch.cuda import is_available
 
 
 def main():
@@ -30,6 +31,7 @@ def main():
     schedule_sampler = create_named_schedule_sampler(args.schedule_sampler, diffusion)
 
     logger.log("creating data loader...")
+    logger.log(is_available())
     data = load_data(
         dataset_path=args.dataset_path,
         dataset_name=args.dataset_name,
