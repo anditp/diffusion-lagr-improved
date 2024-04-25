@@ -1,0 +1,53 @@
+#!/bin/bash 
+
+# This is a job script, which was used for training the ScIDiff model
+
+#SBATCH --partition=titanic
+#SBATCH --gres=gpu:4
+#SBATCH --job-name=test_diff_lagr
+#SBATCH --cpus-per-task=12
+#SBATCH --output=logs/slurm_out.stdout
+#SBATCH --error=logs/slurm_out.stderr
+#SBATCH --mem=40g
+#SBATCH --open-mode=append
+#SBATCH --requeue
+#SBATCH --requeue
+
+
+DATESTAMP=`date +%Y%m%d`
+# paths to store Slurm's log files
+LOGS_FOLDER="${HOME}/local_logs/test_diff_lagr/${DATESTAMP}/${SLURM_JOB_ID}"
+LOG_STDOUT="${HOME}/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stdout"
+
+
+# Create logs folder
+mkdir -p $LOGS_FOLDER
+
+# ScIDiff-related arguments
+TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
+
+echo $LOGS_FOLDER >> $LOG_STDOUT
+DATA_FLAGS="--dataset_path ~/data/Lagr_u1c_diffusion.h5 --dataset_name train"
+MODEL_FLAGS="--dims 1 --image_size 1800 --in_channels 1 --num_channels 128 --num_res_blocks 2 --attention_resolutions 450,225 --channel_mult 1,2,3,4"
+DIFFUSION_FLAGS="--diffusion_steps 800 --noise_schedule tanh6,1"
+TRAIN_FLAGS="--lr 1e-4 --batch_size 64"
+
+
+# Start or restart experiment
+date >> $LOG_STDOUT
+echo "===== Starting job =====">> $LOG_STDOUT
+echo "JOB ID: $SLURM_JOB_ID" >> $LOG_STDOUT
+
+# Load the miniconda environment
+source $HOME/.bashrc
+
+which python >> $LOG_STDOUT
+
+# Training scidiff model with 3-D lagrangian trajectories
+# MODELS_PATH can be a path to a directory that contains a weights.pt checkpoint file
+echo "here" >> $LOG_STDOUT
+python $TEST_PATH/turb_train.py $DATA_FLAGS $MODEL_FLAGS $DIFFUSION_FLAGS $TRAIN_FLAGS >> $LOG_STDOUT
+
+# Move Slurm's logs to folder named with date
+mv $HOME/$LOG_STDOUT $LOGS_FOLDER
+mv $HOME/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stderr $LOGS_FOLDER
