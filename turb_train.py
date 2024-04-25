@@ -34,6 +34,7 @@ def main():
     logger.log("creating data loader...")
     logger.log(is_available())
     logger.log(torch.version.cuda)
+    logger.log(torch.cuda.device_count())
     data = load_data(
         dataset_path=args.dataset_path,
         dataset_name=args.dataset_name,
