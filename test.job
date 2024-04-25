@@ -5,6 +5,7 @@
 #SBATCH --partition=titanic
 #SBATCH -t 02:00:00
 #SBATCH --gres=gpu:4
+#SBATCH --nodelist titanic-2
 #SBATCH --job-name=test_diff_lagr
 #SBATCH --cpus-per-task=12
 #SBATCH --output=logs/slurm_out.stdout
