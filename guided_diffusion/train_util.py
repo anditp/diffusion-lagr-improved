@@ -104,7 +104,7 @@ class TrainLoop:
                     "Distributed training requires CUDA. "
                     "Gradients will not be synchronized properly!"
                 )
-            self.use_ddp = False
+            self.use_ddp = True
             self.ddp_model = self.model
 
     def _load_and_sync_parameters(self):

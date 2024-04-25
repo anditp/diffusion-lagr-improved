@@ -24,7 +24,7 @@ def main():
     args = create_argparser().parse_args()
 
     dist_util.setup_dist()
-    logger.configure()
+    logger.configure(dir = "logs")
 
     logger.log("creating model and diffusion...")
     model, diffusion = create_model_and_diffusion(
@@ -112,7 +112,7 @@ def create_argparser():
         num_samples=1,
         batch_size=16,
         use_ddim=False,
-        model_path="/var/folders/n1/8d57zjb53v14xb4995hjg2m00000gn/T/openai-2024-04-19-16-52-49-611233/model000000.pt",
+        model_path="/home/tau/apantea/diffusion-lagr-1/logs/model000000.pt",
     )
     defaults.update(model_and_diffusion_defaults())
     parser = argparse.ArgumentParser()
