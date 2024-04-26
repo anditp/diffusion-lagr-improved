@@ -31,14 +31,7 @@ def main():
     )
     model.to(dist_util.dev())
     schedule_sampler = create_named_schedule_sampler(args.schedule_sampler, diffusion)
-    logger.log(is_available())
-    logger.log(torch.distributed.is_available())
-    logger.log(os.environ["CUDA_VISIBLE_DEVICES"])
-    logger.log(os.environ["MASTER_ADDR"], os.environ["RANK"], os.environ["WORLD_SIZE"])
-    logger.log("creating data loader...")
-    logger.log(is_available())
-    logger.log(torch.version.cuda)
-    logger.log(torch.cuda.device_count())
+    
     data = load_data(
         dataset_path=args.dataset_path,
         dataset_name=args.dataset_name,
@@ -77,7 +70,7 @@ def create_argparser():
         batch_size=16,
         microbatch=-1,  # -1 disables microbatches
         ema_rate="0.9999",  # comma-separated list of EMA values
-        log_interval=500,
+        log_interval=100,
         save_interval=2000,
         resume_checkpoint="",
         use_fp16=False,
