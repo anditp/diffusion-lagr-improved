@@ -6,7 +6,8 @@
 #SBATCH --gres=gpu:4
 #SBATCH -t 24:00:00
 #SBATCH --job-name=train_diff_lagr
-#SBATCH --cpus-per-task=12
+#SBATCH --ntasks-per-node=8
+#SBATCH --cpus-per-task=4
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
 #SBATCH --mem=40g
@@ -31,7 +32,7 @@ echo $LOGS_FOLDER >> $LOG_STDOUT
 DATA_FLAGS="--dataset_path /home/tau/apantea/data/Lagr_u1c_diffusion.h5 --dataset_name train"
 MODEL_FLAGS="--dims 1 --image_size 1800 --in_channels 1 --num_channels 128 --num_res_blocks 2 --attention_resolutions 450,225 --channel_mult 1,2,3,4"
 DIFFUSION_FLAGS="--diffusion_steps 800 --noise_schedule tanh6,1"
-TRAIN_FLAGS="--lr 1e-4 --batch_size 32"
+TRAIN_FLAGS="--lr 1e-4 --batch_size 128"
 
 
 # Start or restart experiment
