@@ -1,6 +1,8 @@
 import h5py
 import numpy as np
 
+
+
 with h5py.File('Lagr_u3c_diffusion.h5', 'r') as h5f:
     rx0 = np.array(h5f.get('min'))
     rx1 = np.array(h5f.get('max'))
