@@ -16,6 +16,7 @@ from guided_diffusion.script_util import (
 from guided_diffusion.train_util import TrainLoop
 from torch.cuda import is_available
 import torch
+import os
 
 
 def main():
@@ -30,7 +31,9 @@ def main():
     )
     model.to(dist_util.dev())
     schedule_sampler = create_named_schedule_sampler(args.schedule_sampler, diffusion)
-
+    
+    logger.log(os.environ["CUDA_VISIBLE_DEVICES"])
+    logger.log(os.environ["MASTER_ADDR"], os.environ["RANK"], os.environ["WORLD_SIZE"])
     logger.log("creating data loader...")
     logger.log(is_available())
     logger.log(torch.version.cuda)
