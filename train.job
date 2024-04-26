@@ -4,7 +4,6 @@
 
 #SBATCH --partition=titanic
 #SBATCH --gres=gpu:2
-echo $CUDA_VISIBLE_DEVICES >> $LOG_STDOUT
 #SBATCH -t 00:01:00
 #SBATCH --job-name=train_diff_lagr
 #SBATCH --cpus-per-task=10
@@ -28,6 +27,7 @@ mkdir -p $LOGS_FOLDER
 # ScIDiff-related arguments
 TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
 
+echo $CUDA_VISIBLE_DEVICES >> $LOG_STDOUT
 echo $LOGS_FOLDER >> $LOG_STDOUT
 DATA_FLAGS="--dataset_path /home/tau/apantea/data/Lagr_u1c_diffusion.h5 --dataset_name train"
 MODEL_FLAGS="--dims 1 --image_size 1800 --in_channels 1 --num_channels 128 --num_res_blocks 2 --attention_resolutions 450,225 --channel_mult 1,2,3,4"
