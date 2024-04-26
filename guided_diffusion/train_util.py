@@ -93,8 +93,8 @@ class TrainLoop:
             logger.log(dist_util.dev())
             self.ddp_model = DDP(
                 self.model,
-                device_ids=[0, 1, 2, 3],
-                output_device=dist_util.dev(),
+                device_ids=None,
+                output_device=None,
                 broadcast_buffers=False,
                 bucket_cap_mb=128,
                 find_unused_parameters=False,
