@@ -6,7 +6,6 @@
 #SBATCH --gres=gpu:2
 #SBATCH -t 24:00:00
 #SBATCH --job-name=train_diff_lagr
-#SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=4
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
