@@ -5,7 +5,7 @@ import os
 import blobfile as bf
 import torch as th
 import torch.distributed as dist
-from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.nn import DataParallel as DP
 from torch.optim import AdamW
 
 from . import dist_util, logger
@@ -90,14 +90,10 @@ class TrainLoop:
         
         if th.cuda.is_available():
             self.use_ddp = True
-            logger.log(dist_util.dev())
-            self.ddp_model = DDP(
+            device = th.device("cuda:0" if th.cuda.is_available() else "cpu")
+            self.ddp_model = DP(
                 self.model,
-                device_ids=None,
-                output_device=None,
-                broadcast_buffers=False,
-                bucket_cap_mb=128,
-                find_unused_parameters=False,
+                device_ids=[0,1,2,3]
             )
         else:
             if dist.get_world_size() > 1:
