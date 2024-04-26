@@ -32,6 +32,7 @@ def main():
     model.to(dist_util.dev())
     schedule_sampler = create_named_schedule_sampler(args.schedule_sampler, diffusion)
     
+    logger.log(torch.distributed.is_available())
     logger.log(os.environ["CUDA_VISIBLE_DEVICES"])
     logger.log(os.environ["MASTER_ADDR"], os.environ["RANK"], os.environ["WORLD_SIZE"])
     logger.log("creating data loader...")
