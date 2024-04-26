@@ -4,9 +4,10 @@
 
 #SBATCH --partition=titanic
 #SBATCH --gres=gpu:2
+echo $CUDA_VISIBLE_DEVICES >> $LOG_STDOUT
 #SBATCH -t 24:00:00
 #SBATCH --job-name=train_diff_lagr
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=10
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
 #SBATCH --mem=20g
@@ -47,7 +48,7 @@ which python >> $LOG_STDOUT
 # Training scidiff model with 3-D lagrangian trajectories
 # MODELS_PATH can be a path to a directory that contains a weights.pt checkpoint file
 echo "here" >> $LOG_STDOUT
-mpiexec -n 2 python $TEST_PATH/turb_train.py $DATA_FLAGS $MODEL_FLAGS $DIFFUSION_FLAGS $TRAIN_FLAGS >> $LOG_STDOUT
+python $TEST_PATH/turb_train.py $DATA_FLAGS $MODEL_FLAGS $DIFFUSION_FLAGS $TRAIN_FLAGS >> $LOG_STDOUT
 
 # Move Slurm's logs to folder named with date
 mv $HOME/$LOG_STDOUT $LOGS_FOLDER
