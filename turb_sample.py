@@ -51,8 +51,6 @@ def main():
     #     np.load('../velocity_module-IS64-NC128-NRB3-DS4000-NScosine-LR1e-4-BS256-sample/fixed_noise_64x1x64x64.npy')
     # ).to(dtype=th.float32, device=dist_util.dev())
     import os
-    seed = 0*8 + int(os.environ["CUDA_VISIBLE_DEVICES"])
-    th.manual_seed(seed)
     while len(all_images) * args.batch_size < args.num_samples:
         model_kwargs = {}
         if args.class_cond:
