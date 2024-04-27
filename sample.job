@@ -6,7 +6,7 @@
 #SBATCH --gres=gpu:4
 #SBATCH -t 24:00:00
 #SBATCH --job-name=sample_diff_lagr
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=10
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
 #SBATCH --mem=40g
