@@ -31,7 +31,7 @@ def main():
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
     model.load_state_dict(
-        dist_util.load_state_dict(args.model_path)
+        dist_util.load_state_dict(args.model_path, map_location = th.device("cuda:0"))
     )
     model.to(dist_util.dev())
     if args.use_fp16:
