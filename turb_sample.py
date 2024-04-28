@@ -9,6 +9,7 @@ import os
 import numpy as np
 import torch as th
 import torch.distributed as dist
+from torch.nn import DataParallel as DP
 
 from guided_diffusion import dist_util, logger
 from guided_diffusion.script_util import (
@@ -35,6 +36,10 @@ def main():
     )
     model.load_state_dict(
         dist_util.load_state_dict(args.model_path, map_location = th.device("cuda"))
+    )
+    model = DP(
+        model,
+        device_ids=[0,1,2,3]
     )
     model.to(dist_util.dev())
     if args.use_fp16:
