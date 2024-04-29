@@ -49,5 +49,5 @@ echo "here" >> $LOG_STDOUT
 python $TEST_PATH/turb_sample.py $SAMPLE_FLAGS $MODEL_FLAGS $DIFFUSION_FLAGS >> $LOG_STDOUT
 
 # Move Slurm's logs to folder named with date
-mv $LOG_STDOUT $LOGS_FOLDER
-mv $HOME/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stderr $LOGS_FOLDER
+# mv $LOG_STDOUT $LOGS_FOLDER
+# mv $HOME/local_logs/test_diff_lagr/slurm_out_$SLURM_JOB_ID.stderr $LOGS_FOLDER
