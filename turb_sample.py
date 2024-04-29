@@ -69,7 +69,7 @@ def main():
         # sample_fn = (
         #     diffusion.p_sample_loop if not args.use_ddim else diffusion.ddim_sample_loop
         # )
-        sample_fn = diffusion.p_sample_loop_history
+        sample_fn = diffusion.p_sample_loop
         sample = sample_fn(
             model,
             (args.batch_size, args.in_channels, args.image_size),
