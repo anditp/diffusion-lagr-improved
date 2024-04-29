@@ -80,7 +80,7 @@ def main():
         #sample = sample.clamp(-1, 1)
         sample[:, -1] = sample[:, -1].clamp(-1, 1)
         #sample = sample.permute(0, 2, 1)
-        sample = sample.permute(0, 1, 3, 2)
+        #sample = sample.permute(0, 1, 3, 2)
         sample = sample.contiguous()
 
         gathered_samples = [th.zeros_like(sample) for _ in range(dist.get_world_size())]
