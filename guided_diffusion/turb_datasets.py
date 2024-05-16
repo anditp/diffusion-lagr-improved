@@ -6,7 +6,6 @@ from torch.nn import functional as F
 from torch.utils.data.distributed import DistributedSampler
 from torchvision.transforms import Compose
 sys.path.append('../')
-from utils import interpolate_nscales, fourier_nscales, GaussianSmoother
 import logger
 
 
