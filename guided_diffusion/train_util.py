@@ -5,7 +5,7 @@ import os
 import blobfile as bf
 import torch as th
 import torch.distributed as dist
-from torch.nn import DataParallel as DP
+from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
 
 from . import dist_util, logger
@@ -52,7 +52,7 @@ def train_distributed(replica_id, replica_count, port, model_params):
         is_distributed = True,
     )
     
-    model = dist.DistributedDataParallel(model, device_ids=[replica_id])
+    model = DDP(model, device_ids=[replica_id])
     
     logger.log("training...")
     TrainLoop(
