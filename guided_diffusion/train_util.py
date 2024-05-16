@@ -33,7 +33,7 @@ def train_distributed(replica_id, replica_count, port, model_params):
     os.environ['MASTER_ADDR'] = 'localhost'
     os.environ['MASTER_PORT'] = str(port)
     dist.init_process_group('nccl', rank=replica_id, world_size=replica_count)
-    dataset = dataset_from_file(model_params.data_path, model_params.batch_size,
+    dataset = dataset_from_file(model_params.dataset_path, model_params.batch_size,
                                 is_distributed=True,
                                 coordinate=model_params.coordinate)
     device = th.device('cuda', replica_id)
