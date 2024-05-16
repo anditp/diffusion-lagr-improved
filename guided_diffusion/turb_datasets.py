@@ -6,7 +6,7 @@ from torch.nn import functional as F
 from torch.utils.data.distributed import DistributedSampler
 from torchvision.transforms import Compose
 sys.path.append('../')
-import logger
+from guided_diffusion import logger
 
 
 # interpolation methods
