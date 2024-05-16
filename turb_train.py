@@ -46,7 +46,6 @@ def main():
 def create_argparser():
     defaults = dict(
         dataset_path="/home/tau/apantea/data/velocities_normalized.npy",
-        dataset_name="train",
         schedule_sampler="uniform",
         lr=1e-4,
         weight_decay=0.0,
@@ -55,10 +54,11 @@ def create_argparser():
         microbatch=-1,  # -1 disables microbatches
         ema_rate="0.9999",  # comma-separated list of EMA values
         log_interval=100,
-        save_interval=2000,
+        save_interval=10000,
         resume_checkpoint="",
         use_fp16=False,
         fp16_scale_growth=1e-3,
+        coordinate = 0,
     )
     defaults.update(model_and_diffusion_defaults())
     parser = argparse.ArgumentParser()
