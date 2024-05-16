@@ -22,6 +22,8 @@ from guided_diffusion.script_util import (
     args_to_dict,
     add_dict_to_argparser,
 )
+from torch.utils.tensorboard import SummaryWriter
+import numpy as np
 
 # For ImageNet experiments, this was a good default value.
 # We found that the lg_loss_scale quickly climbed to
@@ -130,7 +132,13 @@ class TrainLoop:
             use_fp16=self.use_fp16,
             fp16_scale_growth=fp16_scale_growth,
         )
+        
+        
         self.device = th.device("cuda", replica_id)
+        self.model_dir = "/home/tau/apantea/diffusion-lagr-1"
+        self.max_grad_norm = 1
+
+
 
         self.opt = AdamW(
             self.mp_trainer.master_params, lr=self.lr, weight_decay=self.weight_decay
@@ -196,9 +204,10 @@ class TrainLoop:
             or self.step + self.resume_step < self.lr_anneal_steps
         ):
             batch = next(self.data)
-            self.run_step(batch)
+            loss, grad_norm = self.run_step(batch)
             if self.step % self.log_interval == 0:
                 logger.dumpkvs()
+                self._write_summary(self.step, loss, grad_norm)
             if self.step % self.save_interval == 0:
                 self.save()
                 # Run for a finite amount of time in integration tests.
@@ -210,12 +219,13 @@ class TrainLoop:
             self.save()
 
     def run_step(self, batch):
-        self.forward_backward(batch)
+        loss, grad_norm = self.forward_backward(batch)
         took_step = self.mp_trainer.optimize(self.opt)
         if took_step:
             self._update_ema()
         self._anneal_lr()
         self.log_step()
+        return loss, grad_norm
 
     def forward_backward(self, batch):
         self.mp_trainer.zero_grad()
@@ -243,7 +253,9 @@ class TrainLoop:
             log_loss_dict(
                 self.diffusion, t, {k: v * weights for k, v in losses.items()}
             )
+            grad_norm = th.sqrt(th.sum([th.norm(p.grad)**2 for p in self.model.parameters()]))
             self.mp_trainer.backward(loss)
+            return loss, grad_norm
 
     def _update_ema(self):
         for rate, params in zip(self.ema_rate, self.ema_params):
@@ -285,6 +297,18 @@ class TrainLoop:
                 th.save(self.opt.state_dict(), f)
 
         dist.barrier()
+
+
+    def _write_summary(self, step, loss, grad_norm):
+      """
+      Function that adds to Tensorboard the loss and the gradient norm.
+      """
+      writer = SummaryWriter(self.model_dir, purge_step=step)
+      writer.add_scalar('train/loss', loss, step)
+      writer.add_scalar('train/grad_norm', grad_norm, step)
+      writer.flush()
+      self.summary_writer = writer
+
 
 
 def parse_resume_step_from_filename(filename):
