@@ -7,6 +7,7 @@ import torch as th
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim import AdamW
+import torch.nn as nn
 
 from . import dist_util, logger
 from .fp16_util import MixedPrecisionTrainer
@@ -58,7 +59,7 @@ def train_distributed(replica_id, replica_count, port, model_params):
     model = DDP(model, device_ids=[replica_id])
     
     logger.log("training...")
-    TrainLoop(
+    TL = TrainLoop(
         model=model,
         diffusion=diffusion,
         data=data,
@@ -75,7 +76,9 @@ def train_distributed(replica_id, replica_count, port, model_params):
         weight_decay=model_params.weight_decay,
         lr_anneal_steps=model_params.lr_anneal_steps,
         replica_id = replica_id
-    ).run_loop()
+    )
+    TL.is_master == (replica_id) == 0
+    TL.run_loop()
 
 
 
@@ -210,9 +213,7 @@ class TrainLoop:
                 self._write_summary(self.step, loss, grad_norm)
             if self.step % self.save_interval == 0:
                 self.save()
-                # Run for a finite amount of time in integration tests.
-                if os.environ.get("DIFFUSION_TRAINING_TEST", "") and self.step > 0:
-                    return
+                    
             self.step += 1
         # Save the last checkpoint if it wasn't already saved.
         if (self.step - 1) % self.save_interval != 0:
@@ -272,31 +273,28 @@ class TrainLoop:
     def log_step(self):
         logger.logkv("step", self.step + self.resume_step)
         logger.logkv("samples", (self.step + self.resume_step + 1) * self.global_batch)
+    
+
 
     def save(self):
         def save_checkpoint(rate, params):
             state_dict = self.mp_trainer.master_params_to_state_dict(params)
-            if dist.get_rank() == 0:
+            if self.replica_id == 0:
                 logger.log(f"saving model {rate}...")
                 if not rate:
                     filename = f"model{(self.step+self.resume_step):06d}.pt"
                 else:
                     filename = f"ema_{rate}_{(self.step+self.resume_step):06d}.pt"
-                with bf.BlobFile(bf.join(get_blob_logdir(), filename), "wb") as f:
-                    th.save(state_dict, f)
+                th.save(state_dict, f"{self.model_dir}/{filename}")
 
         save_checkpoint(0, self.mp_trainer.master_params)
         for rate, params in zip(self.ema_rate, self.ema_params):
             save_checkpoint(rate, params)
 
-        if dist.get_rank() == 0:
-            with bf.BlobFile(
-                bf.join(get_blob_logdir(), f"opt{(self.step+self.resume_step):06d}.pt"),
-                "wb",
-            ) as f:
-                th.save(self.opt.state_dict(), f)
+        if self.is_master:
+            f = f"opt{(self.step+self.resume_step):06d}.pt"
+            th.save(self.opt.state_dict(), f"{self.model_dir}/{f}")
 
-        dist.barrier()
 
 
     def _write_summary(self, step, loss, grad_norm):
