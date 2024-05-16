@@ -77,7 +77,7 @@ def train_distributed(replica_id, replica_count, port, model_params):
         lr_anneal_steps=model_params.lr_anneal_steps,
         replica_id = replica_id
     )
-    TL.is_master == (replica_id) == 0
+    TL.is_master = (replica_id) == 0
     TL.run_loop()
 
 
