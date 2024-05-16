@@ -75,7 +75,6 @@ class ToTensor(object):
 
 def dataset_from_file(npy_fname, 
                       batch_size, 
-                      levels, 
                       coordinate=None, 
                       is_distributed=False, 
                       **kwargs):
