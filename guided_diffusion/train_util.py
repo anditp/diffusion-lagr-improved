@@ -52,6 +52,7 @@ def train_distributed(replica_id, replica_count, port, model_params):
         is_distributed = True,
     )
     
+    model = model.to(device)
     model = DDP(model, device_ids=[replica_id])
     
     logger.log("training...")
