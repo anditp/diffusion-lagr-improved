@@ -285,7 +285,7 @@ class TrainLoop:
                     filename = f"model{(self.step+self.resume_step):06d}.pt"
                 else:
                     filename = f"ema_{rate}_{(self.step+self.resume_step):06d}.pt"
-                th.save(state_dict, f"{self.model_dir}/{filename}")
+                th.save(state_dict, f"{self.model_dir}/logs/{filename}")
 
         save_checkpoint(0, self.mp_trainer.master_params)
         for rate, params in zip(self.ema_rate, self.ema_params):
@@ -293,7 +293,7 @@ class TrainLoop:
 
         if self.is_master:
             f = f"opt{(self.step+self.resume_step):06d}.pt"
-            th.save(self.opt.state_dict(), f"{self.model_dir}/{f}")
+            th.save(self.opt.state_dict(), f"{self.model_dir}/logs/{f}")
 
 
 
