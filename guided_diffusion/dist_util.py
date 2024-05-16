@@ -41,12 +41,12 @@ def setup_dist():
     dist.init_process_group(backend=backend, init_method="env://")
 
 
-def dev():
+def dev(replica_id):
     """
     Get the device to use for torch.distributed.
     """
     if th.cuda.is_available():
-        return th.device("cuda")
+        return th.device("cuda", replica_id)
     return th.device("cpu")
 
 

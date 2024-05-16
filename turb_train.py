@@ -5,7 +5,12 @@ Train a diffusion model on Lagrangian trajectories in 3d turbulence.
 import argparse
 
 from guided_diffusion import dist_util, logger
-from guided_diffusion.turb_datasets import load_data
+from guided_diffusion.train_util import TrainLoop, train_distributed
+from torch.cuda import is_available, device_count
+import torch
+import os
+from torch.multiprocessing import spawn
+from guided_diffusion.turb_datasets import dataset_from_file
 from guided_diffusion.resample import create_named_schedule_sampler
 from guided_diffusion.script_util import (
     model_and_diffusion_defaults,
@@ -13,55 +18,34 @@ from guided_diffusion.script_util import (
     args_to_dict,
     add_dict_to_argparser,
 )
-from guided_diffusion.train_util import TrainLoop
-from torch.cuda import is_available
-import torch
-import os
+
+
+def _get_free_port():
+  import socketserver
+  with socketserver.TCPServer(("localhost", 0), None) as s:
+    return s.server_address[1]
 
 
 def main():
     args = create_argparser().parse_args()
 
-    dist_util.setup_dist()
+    replica_count = device_count()
     logger.configure(dir = "logs")
 
     logger.log("creating model and diffusion...")
-    model, diffusion = create_model_and_diffusion(
-        **args_to_dict(args, model_and_diffusion_defaults().keys())
-    )
-    model.to(dist_util.dev())
-    schedule_sampler = create_named_schedule_sampler(args.schedule_sampler, diffusion)
+    logger.log(replica_count)
     
-    data = load_data(
-        dataset_path=args.dataset_path,
-        dataset_name=args.dataset_name,
-        batch_size=args.batch_size,
-        class_cond=args.class_cond,
-    )
-
-    logger.log("training...")
-    TrainLoop(
-        model=model,
-        diffusion=diffusion,
-        data=data,
-        batch_size=args.batch_size,
-        microbatch=args.microbatch,
-        lr=args.lr,
-        ema_rate=args.ema_rate,
-        log_interval=args.log_interval,
-        save_interval=args.save_interval,
-        resume_checkpoint=args.resume_checkpoint,
-        use_fp16=args.use_fp16,
-        fp16_scale_growth=args.fp16_scale_growth,
-        schedule_sampler=schedule_sampler,
-        weight_decay=args.weight_decay,
-        lr_anneal_steps=args.lr_anneal_steps,
-    ).run_loop()
+    if replica_count > 1:
+        if args.batch_size % replica_count != 0:
+          raise ValueError(f"Batch size {args.batch_size} is not evenly divisble by # GPUs {replica_count}.")
+        args.batch_size = args.batch_size // replica_count
+        port = _get_free_port()
+        spawn(train_distributed, args=(replica_count, port, args), nprocs=replica_count, join=True)
 
 
 def create_argparser():
     defaults = dict(
-        dataset_path="datasets/Lagr_u1c_diffusion-demo.h5",
+        dataset_path="/home/tau/apantea/data/velocities_normalized.npy",
         dataset_name="train",
         schedule_sampler="uniform",
         lr=1e-4,

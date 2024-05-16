@@ -3,7 +3,7 @@
 # This is a job script, which was used for training the ScIDiff model
 
 #SBATCH --partition=titanic
-#SBATCH --gres=gpu:4
+#SBATCH --gres=gpu:3
 #SBATCH -t 04-00:00:00
 #SBATCH --job-name=train_diff_lagr
 #SBATCH --cpus-per-task=10
@@ -29,8 +29,8 @@ TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
 
 echo $CUDA_VISIBLE_DEVICES >> $LOG_STDOUT
 echo $LOGS_FOLDER >> $LOG_STDOUT
-DATA_FLAGS="--dataset_path /home/tau/apantea/data/Lagr_u1c_diffusion.h5 --dataset_name train"
-MODEL_FLAGS="--dims 1 --image_size 2000 --in_channels 1 --num_channels 128 --num_res_blocks 3 --attention_resolutions 250,125 --channel_mult 1,1,2,3,4"
+DATA_FLAGS="--dataset_path /home/tau/apantea/data/velocities_normalized.npy"
+MODEL_FLAGS="--dims 1 --image_size 2000 --in_channels 1 --num_channels 32 --num_res_blocks 1 --channel_mult 1,2,4"
 DIFFUSION_FLAGS="--diffusion_steps 800 --noise_schedule tanh6,1"
 TRAIN_FLAGS="--lr 1e-4 --batch_size 128"
 
