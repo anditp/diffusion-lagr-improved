@@ -279,7 +279,7 @@ class TrainLoop:
     def save(self):
         def save_checkpoint(rate, params):
             state_dict = self.mp_trainer.master_params_to_state_dict(params)
-            if self.replica_id == 0:
+            if self.is_master:
                 logger.log(f"saving model {rate}...")
                 if not rate:
                     filename = f"model{(self.step+self.resume_step):06d}.pt"
