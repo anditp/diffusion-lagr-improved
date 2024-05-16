@@ -253,8 +253,8 @@ class TrainLoop:
             log_loss_dict(
                 self.diffusion, t, {k: v * weights for k, v in losses.items()}
             )
-            grad_norm = th.sqrt(th.sum([th.norm(p.grad)**2 for p in self.model.parameters()]))
             self.mp_trainer.backward(loss)
+            grad_norm = th.sqrt(th.sum([th.norm(p.grad)**2 for p in self.model.parameters()]))
             return loss, grad_norm
 
     def _update_ema(self):
