@@ -32,11 +32,12 @@ def main():
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
     state_dict = th.load(args.model_path)
-    state_dict_new = dict(state_dict)
+    state_dict_new = {}
     for key in state_dict.keys():
         new_key = key[7:]
         state_dict_new[new_key] = state_dict[key]
     del state_dict
+    logger.log(state_dict_new.keys())
         
     model.load_state_dict(state_dict_new)
     
