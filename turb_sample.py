@@ -37,8 +37,7 @@ def main():
         new_key = key[7:]
         state_dict_new[new_key] = state_dict[key]
     del state_dict
-    logger.log(state_dict_new.keys())
-        
+    logger.log(state_dict_new)
     model.load_state_dict(state_dict_new)
     
     device = th.device("cuda")
