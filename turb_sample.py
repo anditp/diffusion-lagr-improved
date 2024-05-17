@@ -26,6 +26,8 @@ def main():
 
     dist_util.setup_dist()
     logger.configure(dir = "logs")
+    
+    logger.log(args.output)
 
     logger.log("creating model and diffusion...")
     model, diffusion = create_model_and_diffusion(
@@ -49,7 +51,6 @@ def main():
 
     logger.log("sampling...")
     all_images = []
-    all_labels = []
     #noise = th.zeros(
     # noise = th.ones(
     #     (args.batch_size, args.in_channels, args.image_size),
@@ -79,25 +80,12 @@ def main():
         #sample = sample.permute(0, 1, 3, 2)
         sample = sample.contiguous()
 
-        gathered_samples = [th.zeros_like(sample)]
-        all_images.extend([sample.cpu().numpy() for sample in gathered_samples])
+        all_images.append(sample.cpu().numpy())
         logger.log(f"created {len(all_images) * args.batch_size} samples")
 
     arr = np.concatenate(all_images, axis=0)
     arr = arr[: args.num_samples]
-    if args.class_cond:
-        label_arr = np.concatenate(all_labels, axis=0)
-        label_arr = label_arr[: args.num_samples]
-    if dist.get_rank() == 0:
-        shape_str = "x".join([str(x) for x in arr.shape])
-        out_path = os.path.join(logger.get_dir(), f"samples_{shape_str}.npz")
-        logger.log(f"saving to {out_path}")
-        if args.class_cond:
-            np.savez(out_path, arr, label_arr)
-        else:
-            np.savez(out_path, arr)
-
-    dist.barrier()
+    np.save(args.output, arr)
     logger.log("sampling complete")
 
                                                                                                         
@@ -108,6 +96,7 @@ def create_argparser():
         batch_size=16,
         use_ddim=False,
         model_path="/home/tau/apantea/diffusion-lagr-1/logs/model000000.pt",
+        output = None
     )
     defaults.update(model_and_diffusion_defaults())
     parser = argparse.ArgumentParser()
