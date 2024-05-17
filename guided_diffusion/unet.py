@@ -7,8 +7,8 @@ import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
 
-from guided_diffusion.fp16_util import convert_module_to_f16, convert_module_to_f32
-from guided_diffusion.nn import (
+from .fp16_util import convert_module_to_f16, convert_module_to_f32
+from .nn import (
     checkpoint,
     conv_nd,
     linear,
@@ -892,3 +892,31 @@ class EncoderUNetModel(nn.Module):
         else:
             h = h.type(x.dtype)
             return self.out(h)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -26,9 +26,6 @@ def main():
 
     dist_util.setup_dist()
     logger.configure(dir = "logs")
-    
-    logger.log(th.cuda.device_count())
-    logger.log(th.cuda.current_device())
 
     logger.log("creating model and diffusion...")
     model, diffusion = create_model_and_diffusion(
