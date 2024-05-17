@@ -34,14 +34,9 @@ def main():
     model, diffusion = create_model_and_diffusion(
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
-    model.load_state_dict(
-        dist_util.load_state_dict(args.model_path, map_location = th.device("cuda"))
-    )
-    model = DP(
-        model,
-        device_ids=[0,1,2,3]
-    )
-    model.to(dist_util.dev())
+    model.load_state_dict(th.load(args.model_path))
+    device = th.device("cuda")
+    model.to(th.device("cuda"))
     if args.use_fp16:
         model.convert_to_fp16()
     model.eval()
