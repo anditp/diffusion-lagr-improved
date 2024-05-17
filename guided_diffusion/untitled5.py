@@ -1,4 +1,4 @@
-import guided_diffusion.script_util as script_util
+from guided_diffusion.script_util import create_model_and_diffusion, args_to_dict, model_and_diffusion_defaults
 import torch as th
 
 class Args:
@@ -18,8 +18,8 @@ class Args:
 
 args = Args()
 
-model, diffusion = script_util.create_model_and_diffusion(
-    **script_util.args_to_dict(args, script_util.model_and_diffusion_defaults().keys())
+model, diffusion = create_model_and_diffusion(
+    **args_to_dict(args, model_and_diffusion_defaults().keys())
 )
 model.load_state_dict(th.load(args.model_path))
 
