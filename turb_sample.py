@@ -85,7 +85,8 @@ def main():
 
     arr = np.concatenate(all_images, axis=0)
     arr = arr[: args.num_samples]
-    np.save(args.output, arr)
+    with open(args.output, "wb") as f:
+        np.save(f, arr)
     logger.log("sampling complete")
 
                                                                                                         
