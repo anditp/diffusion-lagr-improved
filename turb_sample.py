@@ -36,7 +36,7 @@ def main():
     )
     model.load_state_dict(th.load(args.model_path))
     device = th.device("cuda")
-    model.to(th.device("cuda"))
+    model.to(device)
     if args.use_fp16:
         model.convert_to_fp16()
     model.eval()
@@ -56,11 +56,6 @@ def main():
     import os
     while len(all_images) * args.batch_size < args.num_samples:
         model_kwargs = {}
-        if args.class_cond:
-            classes = th.randint(
-                low=0, high=NUM_CLASSES, size=(args.batch_size,), device=dist_util.dev()
-            )
-            model_kwargs["y"] = classes
         # sample_fn = (
         #     diffusion.p_sample_loop if not args.use_ddim else diffusion.ddim_sample_loop
         # )
@@ -78,15 +73,8 @@ def main():
         #sample = sample.permute(0, 1, 3, 2)
         sample = sample.contiguous()
 
-        gathered_samples = [th.zeros_like(sample) for _ in range(dist.get_world_size())]
-        dist.all_gather(gathered_samples, sample)  # gather not supported with NCCL
+        gathered_samples = [th.zeros_like(sample)]
         all_images.extend([sample.cpu().numpy() for sample in gathered_samples])
-        if args.class_cond:
-            gathered_labels = [
-                th.zeros_like(classes) for _ in range(dist.get_world_size())
-            ]
-            dist.all_gather(gathered_labels, classes)
-            all_labels.extend([labels.cpu().numpy() for labels in gathered_labels])
         logger.log(f"created {len(all_images) * args.batch_size} samples")
 
     arr = np.concatenate(all_images, axis=0)
