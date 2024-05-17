@@ -31,9 +31,18 @@ def main():
     model, diffusion = create_model_and_diffusion(
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
-    model.load_state_dict(th.load(args.model_path))
+    state_dict = th.load(args.model_path)
+    state_dict_new = dict(state_dict)
+    for key in state_dict.keys():
+        new_key = key[7:]
+        state_dict_new[new_key] = state_dict[key]
+    del state_dict
+        
+    model.load_state_dict(state_dict_new)
+    
     device = th.device("cuda")
     model.to(device)
+    
     if args.use_fp16:
         model.convert_to_fp16()
     model.eval()
