@@ -41,7 +41,6 @@ def main():
     del state_dict
 
     model.load_state_dict(state_dict_new)
-    logger.log(model)
     device = th.device("cuda")
     model.to(device)
     
