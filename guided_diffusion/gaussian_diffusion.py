@@ -153,7 +153,7 @@ class GaussianDiffusion:
         self.betas = betas
         assert len(betas.shape) == 1, "betas must be 1-D"
         try:
-            False
+            assert False, "HERE"
         except AssertionError as e:
             e.args = (betas)
             raise
