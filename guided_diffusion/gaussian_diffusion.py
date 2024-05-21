@@ -151,11 +151,6 @@ class GaussianDiffusion:
         betas = np.array(betas, dtype=np.float64)
         self.betas = betas
         assert len(betas.shape) == 1, "betas must be 1-D"
-        try:
-            assert False, "HERE"
-        except AssertionError as e:
-            e.args = (betas)
-            raise
         assert (betas > 0).all() and (betas <= 1).all()
 
         self.num_timesteps = int(betas.shape[0])
