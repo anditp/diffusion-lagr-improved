@@ -62,7 +62,7 @@ class TensorChanFirst(object):
     def __init(self):
         pass
     def __call__(self, sample):
-        return sample.permute(1, 0)
+        return sample.permute(2, 1)
 
 class ToTensor(object):
     """Convert ndarrays in sample to Tensors."""
@@ -95,7 +95,7 @@ def dataset_from_file(npy_fname,
     # read 3D trajectories
     # usual transformations are ToTensor() and permute(1, 0)
     # to get channel-first tensors
-    transforms = [ToTensor()]
+    transforms = [ToTensor(), TensorChanFirst()]
     if coordinate is not None:
         transforms.append(TakeOneCoord(coord=coordinate))
     dataset = ParticleDataset(npy_fname, transform=Compose(transforms))
