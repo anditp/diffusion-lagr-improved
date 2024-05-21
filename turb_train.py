@@ -45,7 +45,7 @@ def main():
 
 def create_argparser():
     defaults = dict(
-        dataset_path="/home/tau/apantea/data/velocities_normalized.npy",
+        dataset_path="/home/tau/apantea/data/velocities_3d.npy",
         schedule_sampler="uniform",
         lr=1e-4,
         weight_decay=0.0,
