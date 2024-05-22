@@ -33,6 +33,7 @@ def main():
     model, diffusion = create_model_and_diffusion(
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
+    logger.log(model)
     state_dict = th.load(args.model_path)
     state_dict_new = {}
     for key in state_dict.keys():
