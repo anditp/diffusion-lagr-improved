@@ -509,7 +509,6 @@ class UNetModel(nn.Module):
                         )
                     )
                 self._feature_size += ch
-                input_block_chans.append(ch)
             if level != len(channel_mult) - 1:
                 out_ch = ch
                 layers.append(
