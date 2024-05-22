@@ -508,11 +508,12 @@ class UNetModel(nn.Module):
                             use_new_attention_order=use_new_attention_order,
                         )
                     )
+                self.input_blocks.append(TimestepEmbedSequential(*layers))
                 self._feature_size += ch
                 input_block_chans.append(ch)
             if level != len(channel_mult) - 1:
                 out_ch = ch
-                layers.append(
+                self.input_blocks.append(
                     TimestepEmbedSequential(
                         ResBlock(
                             ch,
@@ -531,10 +532,9 @@ class UNetModel(nn.Module):
                     )
                 )
                 ch = out_ch
+                input_block_chans.append(ch)
                 ds *= 2
                 self._feature_size += ch
-            
-            self.input_blocks.append(TimestepEmbedSequential(*layers))
 
         self.middle_block = TimestepEmbedSequential(
             ResBlock(
@@ -544,6 +544,13 @@ class UNetModel(nn.Module):
                 dims=dims,
                 use_checkpoint=use_checkpoint,
                 use_scale_shift_norm=use_scale_shift_norm,
+            ),
+            AttentionBlock(
+                ch,
+                use_checkpoint=use_checkpoint,
+                num_heads=num_heads,
+                num_head_channels=num_head_channels,
+                use_new_attention_order=use_new_attention_order,
             ),
             ResBlock(
                 ch,
@@ -558,8 +565,8 @@ class UNetModel(nn.Module):
 
         self.output_blocks = nn.ModuleList([])
         for level, mult in list(enumerate(channel_mult))[::-1]:
-            for i in range(num_res_blocks):
-                ich = int(mult * model_channels)
+            for i in range(num_res_blocks + 1):
+                ich = input_block_chans.pop()
                 layers = [
                     ResBlock(
                         ch + ich,
@@ -796,13 +803,6 @@ class EncoderUNetModel(nn.Module):
                 use_checkpoint=use_checkpoint,
                 use_scale_shift_norm=use_scale_shift_norm,
             ),
-            AttentionBlock(
-                ch,
-                use_checkpoint=use_checkpoint,
-                num_heads=num_heads,
-                num_head_channels=num_head_channels,
-                use_new_attention_order=use_new_attention_order,
-            ),
             ResBlock(
                 ch,
                 time_embed_dim,
@@ -885,6 +885,8 @@ class EncoderUNetModel(nn.Module):
         else:
             h = h.type(x.dtype)
             return self.out(h)
+
+
 
 
 
