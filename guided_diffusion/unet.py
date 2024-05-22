@@ -531,7 +531,6 @@ class UNetModel(nn.Module):
                     )
                 )
                 ch = out_ch
-                input_block_chans.append(ch)
                 ds *= 2
                 self._feature_size += ch
             
@@ -653,7 +652,6 @@ class UNetModel(nn.Module):
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
-            tmp = hs.pop()
         h = h.type(x.dtype)
         return self.out(h)
 
@@ -887,6 +885,10 @@ class EncoderUNetModel(nn.Module):
         else:
             h = h.type(x.dtype)
             return self.out(h)
+
+
+
+
 
 
 
