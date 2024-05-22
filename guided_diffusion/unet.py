@@ -529,11 +529,12 @@ class UNetModel(nn.Module):
                         )
                     )
                 )
-                self.input_blocks.append(TimestepEmbedSequential(*layers))
                 ch = out_ch
                 input_block_chans.append(ch)
                 ds *= 2
                 self._feature_size += ch
+                
+            self.input_blocks.append(TimestepEmbedSequential(*layers))
 
         self.middle_block = TimestepEmbedSequential(
             ResBlock(
