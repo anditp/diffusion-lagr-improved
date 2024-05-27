@@ -15,5 +15,6 @@ xfile.close()
 print(traj.shape, vel.shape)
 
 
-
+np.save("/home/tau/apantea/data/trajectories_R_3d.npy", traj)
+np.save("/home/tau/apantea/data/velocities_R_3d.npy", vel)
 
