@@ -30,8 +30,8 @@ TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
 
 echo $CUDA_VISIBLE_DEVICES >> $LOG_STDOUT
 echo $LOGS_FOLDER >> $LOG_STDOUT
-DATA_FLAGS="--dataset_path /home/tau/apantea/data/velocities_normalized.npy"
-MODEL_FLAGS="--dims 1 --image_size 2000 --in_channels 1 --num_channels 64 --num_res_blocks 1 --channel_mult 1,1,2,3,4"
+DATA_FLAGS="--dataset_path /home/tau/apantea/data/velocities_normalized_ql.npy"
+MODEL_FLAGS="--dims 1 --image_size 1800 --in_channels 1 --num_channels 64 --num_res_blocks 1 --channel_mult 1,1,2,3,4"
 DIFFUSION_FLAGS="--diffusion_steps 100 --noise_schedule tanh6,1"
 TRAIN_FLAGS="--lr 1e-5 --batch_size 192"
 
