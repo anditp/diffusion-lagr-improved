@@ -31,7 +31,7 @@ TEST_PATH="$HOME/diffusion-lagr-1" # path to the ScIDiff repository
 echo $LOGS_FOLDER >> $LOG_STDOUT
 MODEL_FLAGS="--dims 1 --image_size 2000 --in_channels 3 --num_channels 128 --num_res_blocks 1 --channel_mult 1,1,2,3,4"
 DIFFUSION_FLAGS="--diffusion_steps 100 --noise_schedule tanh6,1"
-SAMPLE_FLAGS="--num_samples 10000 --batch_size 192 --model_path logs/ema_0.9999_080000.pt --output /home/tau/apantea/diffusion-lagr-1/logs/samples_${SLURM_JOB_ID}_1d.npy"
+SAMPLE_FLAGS="--num_samples 10000 --batch_size 192 --model_path logs/ema_0.9999_120000.pt --output /home/tau/apantea/diffusion-lagr-1/logs/samples_${SLURM_JOB_ID}_3d.npy"
 
 
 # Start or restart experiment
