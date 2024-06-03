@@ -43,7 +43,7 @@ class ParticleDataset(Dataset):
 class TakeOneCoord(object):
     """Take one coordinate from the trajectory. The object must be a Tensor that
     has shape (num_coords, length). Therefore, take note on this. If you're working
-    with the npy file, you have to permute the dimensions fist with TensorChanFirst().
+    with the npy file, you have to permute the dimensions first with TensorChanFirst().
     
     Args:
         coord (int): coordinate to take from the trajectory.
