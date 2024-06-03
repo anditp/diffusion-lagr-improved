@@ -75,7 +75,6 @@ def main():
             model_kwargs=model_kwargs,
         )
         #sample = sample.clamp(-1, 1)
-        sample[:, -1] = sample[:, -1].clamp(-1, 1)
         #sample = sample.permute(0, 2, 1)
         #sample = sample.permute(0, 1, 3, 2)
         sample = sample.contiguous()
