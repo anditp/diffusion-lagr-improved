@@ -33,6 +33,9 @@ def main():
     logger.configure(dir = "logs")
 
     logger.log("creating model and diffusion...")
+    model, diffusion = create_model_and_diffusion(
+        **args_to_dict(args, model_and_diffusion_defaults().keys())
+    )
     logger.log(replica_count)
     
     if replica_count > 1:
@@ -45,7 +48,7 @@ def main():
 
 def create_argparser():
     defaults = dict(
-        dataset_path="/home/tau/apantea/data/velocities_normalized.npy",
+        dataset_path="/home/tau/apantea/data/trajectories_paired_1d.npy",
         schedule_sampler="uniform",
         lr=1e-4,
         weight_decay=0.0,
