@@ -98,7 +98,8 @@ def dataset_from_file(npy_fname,
     transforms = [ToTensor()]
     if coordinate is not None:
         transforms.append(TakeOneCoord(coord=coordinate))
-    transforms.append(TensorChanFirst())
+    else:
+        transforms.append(TensorChanFirst())
     dataset = ParticleDataset(npy_fname, transform=Compose(transforms))
     
     
