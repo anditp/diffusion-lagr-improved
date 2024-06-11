@@ -3,8 +3,8 @@
 # This is a job script, which was used for training the ScIDiff model
 
 #SBATCH --partition=titanic
-#SBATCH --nodelist titanic-1
-#SBATCH --exclude titanic-4
+#SBATCH --nodelist republic-7
+#SBATCH --gres=gpu:3
 #SBATCH -t 04-00:00:00
 #SBATCH --job-name=train_diff_lagr
 #SBATCH --cpus-per-task=10
