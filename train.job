@@ -2,10 +2,14 @@
 
 # This is a job script, which was used for training the ScIDiff model
 
+#SBATCH --partition=titanic
+#SBATCH --nodelist republic-1
 #SBATCH -t 04-00:00:00
 #SBATCH --job-name=train_diff_lagr
+#SBATCH --cpus-per-task=10
 #SBATCH --output=logs/slurm_out.stdout
 #SBATCH --error=logs/slurm_out.stderr
+#SBATCH --mem=40g
 #SBATCH --open-mode=append
 #SBATCH --requeue
 #SBATCH --requeue
