@@ -4,6 +4,7 @@
 
 #SBATCH --partition=titanic
 #SBATCH --nodelist republic-1
+#SBATCH --exclude titanic-4
 #SBATCH -t 04-00:00:00
 #SBATCH --job-name=train_diff_lagr
 #SBATCH --cpus-per-task=10
