@@ -3,7 +3,6 @@ Print the model summary of UNetModel being used.
 """
 
 import argparse
-from torchsummary import summary
 import torch as th
 
 import os
@@ -36,7 +35,7 @@ def main():
     for p in model.parameters():
         nr += th.numel(p)
     
-    logger.log(p)
+    logger.log(nr)
 
 
 def create_argparser():
