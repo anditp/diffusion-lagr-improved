@@ -32,9 +32,11 @@ def main():
     model, diffusion = create_model_and_diffusion(
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
-    model.to(device)
+    nr = 0
+    for p in model.parameters():
+        nr += th.numel(p)
     
-    summary(model, [(args.in_channels, args.image_size), ()])
+    logger.log(p)
 
 
 def create_argparser():
