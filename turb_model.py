@@ -4,6 +4,7 @@ Print the model summary of UNetModel being used.
 
 import argparse
 from torchsummary import summary
+import torch as th
 
 import os
 import sys
@@ -23,13 +24,15 @@ from guided_diffusion.script_util import (
 
 def main():
     args = create_argparser().parse_args()
-
+    
+    device = th.device("cuda")
     logger.configure(dir = "logs")
 
     logger.log("creating model and diffusion...")
     model, diffusion = create_model_and_diffusion(
         **args_to_dict(args, model_and_diffusion_defaults().keys())
     )
+    model.to(device)
     
     summary(model, [(args.in_channels, args.image_size), ()])
 
