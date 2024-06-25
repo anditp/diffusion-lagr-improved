@@ -1,2 +1,2 @@
-# diffusion-lagr-1
+# Generative Diffusion Models for Pair Dispersion in HIT
  Diffusion
